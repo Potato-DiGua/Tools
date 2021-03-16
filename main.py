@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     # 图片合并
     parser_img = subparsers.add_parser("img", help="图片合并")
-    parser_img.add_argument('-i', '--input', help="图片的路径", nargs='+', required=True)
+    parser_img.add_argument('-i', '--input', help="图片或图片所在文件夹的路径", nargs='+', required=True)
     parser_img.add_argument('-o', '--output', help="合成图片的输出路径", default="./merge.png")
     parser_img.add_argument('-g', '--gravity', choices=["left", "center", "right"], help="图片的水平方向", default="center")
     parser_img.set_defaults(func=img)
