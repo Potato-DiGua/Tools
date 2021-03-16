@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 
 from PIL import Image
@@ -9,9 +10,25 @@ class Gravity(Enum):
     RIGHT = 2
 
 
-def merge_img(img_list: list[str], output_path: str, gravity: Gravity = Gravity.CENTER):
-    im_list = [Image.open(i) for i in img_list if i.endswith(".jpg") or i.endswith(".png")]
+def is_img(path: str) -> bool:
+    return os.path.isfile(path) and (path.endswith(".jpg") or path.endswith(".png"))
 
+
+def merge_img(img_list: list[str], output_path: str, gravity: Gravity = Gravity.CENTER):
+    img_path_list = []
+    for item in img_list:
+        if os.path.isdir(item):
+            for file in os.listdir(item):
+                _path = os.path.join(item, file)
+                if is_img(_path):
+                    img_path_list.append(_path)
+
+        else:
+            if is_img(item):
+                img_path_list.append(item)
+
+    im_list = [Image.open(i) for i in img_path_list]
+    print(im_list)
     width = 0
     height = 0
     for img in im_list:
