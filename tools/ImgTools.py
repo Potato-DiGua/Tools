@@ -5,9 +5,9 @@ from PIL import Image
 
 
 class Gravity(Enum):
-    START = 0
-    CENTER = 1
-    END = 2
+    START = "start"
+    CENTER = "center"
+    END = "end"
 
 
 class Direction(Enum):
@@ -29,7 +29,7 @@ def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
 
 def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity, space: int):
     im_list = get_img_list(input_list)
-    print(im_list)
+    # print(im_list)
     width = 0
     height = 0
     for img in im_list:
@@ -72,7 +72,7 @@ def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity
 
 def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravity, space: int):
     im_list = get_img_list(input_list)
-    print(im_list)
+    # print(im_list)
     width = 0
     height = 0
     for img in im_list:
