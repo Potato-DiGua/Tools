@@ -11,12 +11,12 @@ def img(args):
     gravity: ImgTools.Gravity
 
     if args.gravity == "left":
-        gravity = ImgTools.Gravity.LEFT
+        gravity = ImgTools.Gravity.START
     elif args.gravity == "right":
-        gravity = ImgTools.Gravity.RIGHT
+        gravity = ImgTools.Gravity.END
     else:
         gravity = ImgTools.Gravity.CENTER
-    ImgTools.merge_img(args.input, args.output, gravity)
+    ImgTools.merge_img(args.input, args.output, gravity, ImgTools.Direction(args.direction), args.space)
 
 
 if __name__ == '__main__':
@@ -33,8 +33,10 @@ if __name__ == '__main__':
     # 图片合并
     parser_img = subparsers.add_parser("img", help="图片合并")
     parser_img.add_argument('-i', '--input', help="图片或图片所在文件夹的路径", nargs='+', required=True)
+    parser_img.add_argument('-d', '--direction', help="图片合并方向", choices=["horizontal", "vertical"], default="vertical")
     parser_img.add_argument('-o', '--output', help="合成图片的输出路径", default="./merge.png")
     parser_img.add_argument('-g', '--gravity', choices=["left", "center", "right"], help="图片的水平方向", default="center")
+    parser_img.add_argument('-s', '--space', type=int, help="图片的间距", default=0)
     parser_img.set_defaults(func=img)
 
     arg = parser.parse_args()
