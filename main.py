@@ -10,7 +10,7 @@ def pdf(args):
 
 def img(args):
     ImgTools.merge_img(args.input, args.output, ImgTools.Gravity(args.gravity), ImgTools.Direction(args.direction),
-                       args.space, args.width, args.height)
+                       args.space, args.width, args.height, args.sharp)
 
 
 if __name__ == '__main__':
@@ -34,6 +34,7 @@ if __name__ == '__main__':
     parser_img.add_argument('-s', '--space', type=int, help="图片的间距", default=0)
     parser_img.add_argument('-w', "--width", type=int, help="合成图片的宽度")
     parser_img.add_argument("--height", type=int, help="合成图片的高度")
+    parser_img.add_argument('--sharp', action='store_true', help="锐化", default=False)
     parser_img.set_defaults(func=img)
 
     arg = parser.parse_args()

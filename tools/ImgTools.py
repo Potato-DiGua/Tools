@@ -1,7 +1,7 @@
 import os
 from enum import Enum
 
-from PIL import Image
+from PIL import Image, ImageFilter
 
 
 class Gravity(Enum):
@@ -20,23 +20,30 @@ def is_img(path: str) -> bool:
 
 
 def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
-              directory: Direction, space: int, limit_width: int, limit_height: int):
+              directory: Direction, space: int, limit_width: int, limit_height: int, sharp: bool):
     if directory == Direction.HORIZONTAL:
         width, height, result = merge_img_horizontal(input_list, gravity, space)
     else:
         width, height, result = merge_img_vertical(input_list, gravity, space)
 
     # 缩放
-    if limit_width is not None and limit_height is not None:
-        result = result.resize((limit_width, limit_height))
-    elif limit_width is not None:
-        result = result.resize((limit_width, round(limit_width / result.width * result.height)))
-    elif limit_height is not None:
-        result = result.resize((round(limit_height / result.height * result.width), limit_height))
+    if limit_width is not None or limit_height is not None:
+        if limit_width is not None and limit_height is not None:
+            result = result.resize((limit_width, limit_height))
+        elif limit_width is not None:
+            result = result.resize((limit_width, round(limit_width / result.width * result.height)))
+        elif limit_height is not None:
+            result = result.resize((round(limit_height / result.height * result.width), limit_height))
+        # 锐化
+        if sharp:
+            result = result.filter(ImageFilter.SHARPEN)
 
     # 保存图片
     result.save(output_path)
-    print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({result.width},{result.height})")
+    w, h = result.size
+
+    print("[" + ", ".join([os.path.abspath(i) for i in input_list]) + "]" + " -> " + os.path.abspath(
+        output_path) + f" ({w},{h})")
 
 
 def merge_img_vertical(input_list: list[str], gravity: Gravity, space: int) -> (int, int, Image):
@@ -120,6 +127,10 @@ def merge_img_horizontal(input_list: list[str], gravity: Gravity, space: int) ->
 
 
 def get_img_list(file_list) -> [Image]:
+    return [Image.open(i) for i in get_img_path_list(file_list)]
+
+
+def get_img_path_list(file_list):
     img_path_list = []
     for item in file_list:
         if os.path.isdir(item):
@@ -131,5 +142,4 @@ def get_img_list(file_list) -> [Image]:
         else:
             if is_img(item):
                 img_path_list.append(item)
-    im_list = [Image.open(i) for i in img_path_list]
-    return im_list
+    return img_path_list
