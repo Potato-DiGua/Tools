@@ -1,6 +1,7 @@
 import argparse
-from tools import PdfTools
+
 from tools import ImgTools
+from tools import PdfTools
 
 
 def pdf(args):
@@ -9,7 +10,7 @@ def pdf(args):
 
 def img(args):
     ImgTools.merge_img(args.input, args.output, ImgTools.Gravity(args.gravity), ImgTools.Direction(args.direction),
-                       args.space)
+                       args.space, args.width, args.height)
 
 
 if __name__ == '__main__':
@@ -31,6 +32,8 @@ if __name__ == '__main__':
     parser_img.add_argument('-g', '--gravity', choices=[ImgTools.Gravity.START.value, ImgTools.Gravity.CENTER.value,
                                                         ImgTools.Gravity.END.value], help="图片的水平方向", default="center")
     parser_img.add_argument('-s', '--space', type=int, help="图片的间距", default=0)
+    parser_img.add_argument('-w', "--width", type=int, help="合成图片的宽度")
+    parser_img.add_argument("--height", type=int, help="合成图片的高度")
     parser_img.set_defaults(func=img)
 
     arg = parser.parse_args()

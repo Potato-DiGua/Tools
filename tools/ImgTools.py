@@ -20,15 +20,23 @@ def is_img(path: str) -> bool:
 
 
 def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
-              directory: Direction, space: int):
+              directory: Direction, space: int, limit_width: int, limit_height: int):
     if directory == Direction.HORIZONTAL:
         width, height, result = merge_img_horizontal(input_list, output_path, gravity, space)
     else:
         width, height, result = merge_img_vertical(input_list, output_path, gravity, space)
 
+    # 缩放
+    if limit_width is not None and limit_height is not None:
+        result = result.resize((limit_width, limit_height), Image.LANCZOS)
+    elif limit_width is not None:
+        result = result.resize((limit_width, round(limit_width / result.width * result.height)), Image.LANCZOS)
+    elif limit_height is not None:
+        result = result.resize((round(limit_height / result.height * result.width), limit_height), Image.LANCZOS)
+
     # 保存图片
     result.save(output_path)
-    print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({width},{height})")
+    print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({result.width},{result.height})")
 
 
 def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity, space: int) -> (int, int, Image):
