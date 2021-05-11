@@ -28,11 +28,11 @@ def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
 
     # 缩放
     if limit_width is not None and limit_height is not None:
-        result = result.resize((limit_width, limit_height), Image.LANCZOS)
+        result = result.resize((limit_width, limit_height))
     elif limit_width is not None:
-        result = result.resize((limit_width, round(limit_width / result.width * result.height)), Image.LANCZOS)
+        result = result.resize((limit_width, round(limit_width / result.width * result.height)))
     elif limit_height is not None:
-        result = result.resize((round(limit_height / result.height * result.width), limit_height), Image.LANCZOS)
+        result = result.resize((round(limit_height / result.height * result.width), limit_height))
 
     # 保存图片
     result.save(output_path)
@@ -50,6 +50,7 @@ def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity
         height += h + space
         # 取最大的宽度作为拼接图的宽度
         width = max(width, w)
+    height -= space
 
     # 创建空白长图
     result = Image.new('RGBA', (width, height), 0xffffff)
@@ -91,6 +92,7 @@ def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravi
         width += w + space
         # 取最大的宽度作为拼接图的宽度
         height = max(height, h)
+    width -= space
 
     # 创建空白长图
     result = Image.new('RGBA', (width, height), 0xffffff)
