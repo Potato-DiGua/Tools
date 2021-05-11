@@ -1,4 +1,4 @@
 certifi==2020.6.20
-Pillow==8.0.1
+Pillow==8.2.0
 pyinstaller==4.3
 PyPDF2==1.26.0

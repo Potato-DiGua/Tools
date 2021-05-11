@@ -22,9 +22,9 @@ def is_img(path: str) -> bool:
 def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
               directory: Direction, space: int, limit_width: int, limit_height: int):
     if directory == Direction.HORIZONTAL:
-        width, height, result = merge_img_horizontal(input_list, output_path, gravity, space)
+        width, height, result = merge_img_horizontal(input_list, gravity, space)
     else:
-        width, height, result = merge_img_vertical(input_list, output_path, gravity, space)
+        width, height, result = merge_img_vertical(input_list, gravity, space)
 
     # 缩放
     if limit_width is not None and limit_height is not None:
@@ -39,7 +39,7 @@ def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
     print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({result.width},{result.height})")
 
 
-def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity, space: int) -> (int, int, Image):
+def merge_img_vertical(input_list: list[str], gravity: Gravity, space: int) -> (int, int, Image):
     im_list = get_img_list(input_list)
     # print(im_list)
     width = 0
@@ -53,7 +53,7 @@ def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity
     height -= space
 
     # 创建空白长图
-    result = Image.new('RGBA', (width, height), 0xffffff)
+    result = Image.new('RGB', (width, height), 0xffffff)
     # 拼接图片
     y = 0
 
@@ -81,7 +81,7 @@ def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity
     return width, height, result
 
 
-def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravity, space: int) -> (int, int, Image):
+def merge_img_horizontal(input_list: list[str], gravity: Gravity, space: int) -> (int, int, Image):
     im_list = get_img_list(input_list)
     # print(im_list)
     width = 0
@@ -95,7 +95,7 @@ def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravi
     width -= space
 
     # 创建空白长图
-    result = Image.new('RGBA', (width, height), 0xffffff)
+    result = Image.new('RGB', (width, height), 0xffffff)
     # 拼接图片
     x = 0
 
@@ -119,7 +119,7 @@ def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravi
     return width, height, result
 
 
-def get_img_list(file_list):
+def get_img_list(file_list) -> [Image]:
     img_path_list = []
     for item in file_list:
         if os.path.isdir(item):
