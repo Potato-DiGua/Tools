@@ -11,7 +11,7 @@ class Gravity(Enum):
 
 
 class Direction(Enum):
-    VERTICAL = "vertical",
+    VERTICAL = "vertical"
     HORIZONTAL = "horizontal"
 
 
@@ -22,12 +22,16 @@ def is_img(path: str) -> bool:
 def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
               directory: Direction, space: int):
     if directory == Direction.HORIZONTAL:
-        merge_img_horizontal(input_list, output_path, gravity, space)
+        width, height, result = merge_img_horizontal(input_list, output_path, gravity, space)
     else:
-        merge_img_vertical(input_list, output_path, gravity, space)
+        width, height, result = merge_img_vertical(input_list, output_path, gravity, space)
+
+    # 保存图片
+    result.save(output_path)
+    print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({width},{height})")
 
 
-def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity, space: int):
+def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity, space: int) -> (int, int, Image):
     im_list = get_img_list(input_list)
     # print(im_list)
     width = 0
@@ -65,12 +69,10 @@ def merge_img_vertical(input_list: list[str], output_path: str, gravity: Gravity
             result.paste(img, box=(round(width - w), y))
             y += h + space
 
-    # 保存图片
-    result.save(output_path)
-    print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({width},{height})")
+    return width, height, result
 
 
-def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravity, space: int):
+def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravity, space: int) -> (int, int, Image):
     im_list = get_img_list(input_list)
     # print(im_list)
     width = 0
@@ -104,9 +106,7 @@ def merge_img_horizontal(input_list: list[str], output_path: str, gravity: Gravi
         result.paste(img, box=(x, get_y(h)))
         x += w + space
 
-    # 保存图片
-    result.save(output_path)
-    print("[" + ",".join(input_list) + "]" + "->" + output_path + f"({width},{height})")
+    return width, height, result
 
 
 def get_img_list(file_list):
