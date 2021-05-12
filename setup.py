@@ -1,19 +1,24 @@
+import os
 import re
-import subprocess
 
 import setuptools
 
-p = subprocess.Popen('git tag -l --contains', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-result = p.stdout.readlines()
-if len(result) == 0:
-    raise RuntimeError("当前提交没有tag")
+# 供github actions使用
+VERSION = os.getenv("GITHUB_REF")
+VERSION = VERSION[VERSION.rfind('v'):]
+
+# p = subprocess.Popen('git tag -l --contains', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+# result = p.stdout.readlines()
+# if len(result) == 0:
+#     raise RuntimeError("当前提交没有tag")
+# else:
+#     # print("tag数量为：" + str(len(result)))
+#     VERSION = str(result[0], encoding="utf-8").strip("\n ")
+
+if not re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+$", VERSION):
+    raise RuntimeError("tag格式不合法，例：v1.0.0")
 else:
-    # print("tag数量为：" + str(len(result)))
-    VERSION = str(result[0], encoding="utf-8").strip("\n ")
-    if not re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+$", VERSION):
-        raise RuntimeError("tag格式不合法，例：v1.0.0")
-    else:
-        VERSION = VERSION.removeprefix("v")
+    VERSION = VERSION.removeprefix("v")
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
