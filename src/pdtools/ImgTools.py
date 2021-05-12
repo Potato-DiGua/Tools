@@ -54,10 +54,10 @@ def merge_img_vertical(input_list: list[str], gravity: Gravity, space: int) -> (
     for img in im_list:
         # 单幅图像尺寸
         w, h = img.size
-        height += h + space
+        height += h
         # 取最大的宽度作为拼接图的宽度
         width = max(width, w)
-    height -= space
+    height += (len(im_list) - 1) * space
 
     # 创建空白长图
     result = Image.new('RGB', (width, height), 0xffffff)
@@ -65,25 +65,20 @@ def merge_img_vertical(input_list: list[str], gravity: Gravity, space: int) -> (
     y = 0
 
     if gravity == Gravity.CENTER:  # 图片水平居中
-        for img in im_list:
-            w, h = img.size
+        def get_x(n):
+            return round(width / 2 - n / 2)
+    elif gravity == Gravity.START:  # 图片向左对齐
+        def get_x(n):
+            return 0
+    else:  # 图片向右对齐
+        def get_x(n):
+            return width - n
 
-            result.paste(img, box=(round(width / 2 - w / 2), y))
-            y += h
-    elif gravity == Gravity.START:  # 图片向上对其
-        for img in im_list:
-            w, h = img.size
+    for img in im_list:
+        w, h = img.size
 
-            # 图片水平居中
-            result.paste(img, box=(0, y))
-            y += h
-    else:
-        for img in im_list:  # 图片向下对齐
-            w, h = img.size
-
-            # 图片水平居中
-            result.paste(img, box=(round(width - w), y))
-            y += h + space
+        result.paste(img, box=(get_x(w), y))
+        y += h + space
 
     return width, height, result
 
@@ -96,23 +91,23 @@ def merge_img_horizontal(input_list: list[str], gravity: Gravity, space: int) ->
     for img in im_list:
         # 单幅图像尺寸
         w, h = img.size
-        width += w + space
+        width += w
         # 取最大的宽度作为拼接图的宽度
         height = max(height, h)
-    width -= space
+    width += (len(im_list) - 1) * space
 
     # 创建空白长图
     result = Image.new('RGB', (width, height), 0xffffff)
     # 拼接图片
     x = 0
 
-    if gravity == Gravity.CENTER:
+    if gravity == Gravity.CENTER:  # 图片垂直居中
         def get_y(n):
             return round(height / 2 - n / 2)
-    elif gravity == Gravity.START:
+    elif gravity == Gravity.START:  # 图片向上对齐
         def get_y(n):
             return 0
-    else:
+    else:  # 图片向下对齐
         def get_y(n):
             return height - n
 
