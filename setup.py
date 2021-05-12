@@ -5,7 +5,8 @@ import setuptools
 
 # 供github actions使用
 VERSION = os.getenv("GITHUB_REF")
-VERSION = VERSION[VERSION.rfind('v'):]
+if VERSION is not None:
+    VERSION = VERSION[VERSION.rfind('v'):]
 
 # p = subprocess.Popen('git tag -l --contains', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 # result = p.stdout.readlines()
@@ -18,7 +19,7 @@ VERSION = VERSION[VERSION.rfind('v'):]
 if not re.match(r"^v[0-9]+\.[0-9]+\.[0-9]+$", VERSION):
     raise RuntimeError("tag格式不合法，例：v1.0.0")
 else:
-    VERSION = VERSION.removeprefix("v")
+    VERSION = VERSION[VERSION.rfind('v') + 1:]
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -26,11 +27,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
 install_requires = ['Pillow', 'PyPDF2']
 
 setuptools.setup(
-    name="pdtools",  # Replace with your own username
+    name="custools",  # Replace with your own username
     version=VERSION,
     author="Potato-DiGua",
     author_email="86543402@qq.com",
-    description="A Commonly used simple pdtools!",
+    description="A commonly used simple tools!",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Potato-DiGua/Tools",
@@ -43,5 +44,5 @@ setuptools.setup(
     python_requires=">=3.6",
     install_requires=install_requires,
     entry_points={'console_scripts': [
-        'pdtools = pdtools.entrypoints.main:main']}
+        'custools = tools.entrypoints.main:main']}
 )

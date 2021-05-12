@@ -1,5 +1,6 @@
 import os
 from enum import Enum
+from typing import List
 
 from PIL import Image, ImageFilter
 
@@ -19,7 +20,7 @@ def is_img(path: str) -> bool:
     return os.path.isfile(path) and (path.endswith(".jpg") or path.endswith(".png"))
 
 
-def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
+def merge_img(input_list: List[str], output_path: str, gravity: Gravity,
               directory: Direction, space: int, limit_width: int, limit_height: int, sharp: bool):
     if directory == Direction.HORIZONTAL:
         width, height, result = merge_img_horizontal(input_list, gravity, space)
@@ -46,7 +47,7 @@ def merge_img(input_list: list[str], output_path: str, gravity: Gravity,
         output_path) + f" ({w},{h})")
 
 
-def merge_img_vertical(input_list: list[str], gravity: Gravity, space: int) -> (int, int, Image):
+def merge_img_vertical(input_list: List[str], gravity: Gravity, space: int) -> (int, int, Image):
     im_list = get_img_list(input_list)
     # print(im_list)
     width = 0
@@ -83,7 +84,7 @@ def merge_img_vertical(input_list: list[str], gravity: Gravity, space: int) -> (
     return width, height, result
 
 
-def merge_img_horizontal(input_list: list[str], gravity: Gravity, space: int) -> (int, int, Image):
+def merge_img_horizontal(input_list: List[str], gravity: Gravity, space: int) -> (int, int, Image):
     im_list = get_img_list(input_list)
     # print(im_list)
     width = 0
