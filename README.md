@@ -1,3 +1,4 @@
+![下载](https://img.shields.io/github/downloads/Potato-DiGua/Tools/total) ![Release](https://img.shields.io/github/v/release/Potato-DiGua/Tools)
 # Tools
 - pdf合并
 - 图片合并
